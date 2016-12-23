@@ -13,7 +13,7 @@
 #include <time.h>
 
 // Keyspace information
-const char KEYSPACE[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$@";
+const char KEYSPACE[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz?!";
 const unsigned int KEYSPACE_LENGTH = 64;
 
 /**
