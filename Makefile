@@ -33,11 +33,11 @@ clean:
 	@echo Cleanin up
 	@rm -r $(OBJDIR) $(BINDIR)
 
-install:
+install: $(BINARY)
 	cp $(BINDIR)/$(TARGET) $(INSDIR)
 
-uninstall:
+uninstall: $(BINARY)
 	rm $(INSDIR)/$(TARGET)
 
-test:
+test: $(BINARY)
 	$(BINARY) 3 4

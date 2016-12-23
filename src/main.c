@@ -57,7 +57,7 @@ int main(int argc, char const *argv[])
 
 	// Print first chunk
 	int loc = 0;
-	if (chunk(length, password, passlen, &loc) > 0)
+	if (chunk(length, password, passlen, &loc))
 		return 1;
 
 	// Print remaining chunks
@@ -68,7 +68,7 @@ int main(int argc, char const *argv[])
 		loc++;
 
 		// Print chunk
-		if (chunk(length, password, passlen, &loc) > 0)
+		if (chunk(length, password, passlen, &loc))
 			return 1;
 	}
 
