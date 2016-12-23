@@ -93,7 +93,10 @@ int chunk(int length, char *password, int passlen, int* start)
 {
 	// Return 1 if chunk will exceed buffer
 	if (*start + length > passlen)
+	{
+		printf("Chunk exceeds password buffer length by %d characters.\n", *start + length - passlen);
 		return 1;
+	}
 
 	// Generate length number of random keys
 	for (int i = 0; i < length; ++i)
