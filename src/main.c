@@ -20,6 +20,17 @@ const unsigned KEYSPACE_LENGTH = 64;
 const char SEPARATOR = '_';
 
 /**
+ * Prints a randomly generated password with the given number 
+ * of chunks of the given length
+ *
+ * @param chunks the number of chunks in the password
+ * @param length the length of each chunk
+ *
+ * @return status of password
+ */
+int password(int chunks, int length);
+
+/**
  * Generates a chunk in the given password
  *
  * @param length   the length of the chunk
@@ -59,19 +70,32 @@ int main(int argc, char const *argv[])
 	}
 
 	// Password information
-	int chunks   = atoi(argv[1]);
-	int chunklen = atoi(argv[2]);
-	int passlen  = chunklen*chunks + (chunks - 1); // (chunks - 1) = number of separators
+	int chunks = atoi(argv[1]);
+	int length = atoi(argv[2]);
 
-	// Seed random number generator
-	srand(time(NULL));
+	// Generate password
+	if (password(chunks, length))
+		return 1;
 
+	// Return success
+	return 0;
+}
+
+/**
+ * Generates a password with the given number of chunks of the given length
+ *
+ * @param chunks the number of chunks in the password
+ * @param length the length of each chunk
+ */
+int password(int chunks, int length)
+{
 	// Initialize password
+	int passlen = length*chunks + (chunks - 1);
 	char password[passlen];
 	int end = 0;
 
 	// Print first chunk
-	if (chunk(chunklen, password, passlen, &end))
+	if (chunk(length, password, passlen, &end))
 		return 1;
 
 	// Print remaining chunks
@@ -82,7 +106,7 @@ int main(int argc, char const *argv[])
 			return 1;
 
 		// Print chunk
-		if (chunk(chunklen, password, passlen, &end))
+		if (chunk(length, password, passlen, &end))
 			return 1;
 	}
 
@@ -91,7 +115,7 @@ int main(int argc, char const *argv[])
 
 	// Return success
 	return 0;
-}
+};
 
 /**
  * Generates a chunk in the given password password
