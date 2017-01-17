@@ -16,17 +16,20 @@
 const char KEYSPACE[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz?!";
 const unsigned int KEYSPACE_LENGTH = 64;
 
+// Separator between key groups
+const char SEPARATOR = '_';
+
 /**
  * Generates a chunk in the given password password
  *
  * @param length   the length of the chunk
  * @param password the password to print to
  * @param passlen  the length of the password to print to
- * @param start    the location to start printing at
+ * @param end      the current end of the password
  *
  * @return status of chunk printing
  */
-int chunk(int length, char *password, int passlen, int* start);
+int chunk(int length, char *password, int passlen, int* end);
 
 /**
  * The main function in the program
@@ -52,27 +55,27 @@ int main(int argc, char const *argv[])
 	// Seed random number generator
 	srand(time(NULL));
 
-	// Create password buffer
+	// Initialize password
 	char password[passlen];
+	int end = 0;
 
 	// Print first chunk
-	int loc = 0;
-	if (chunk(length, password, passlen, &loc))
+	if (chunk(length, password, passlen, &end))
 		return 1;
 
 	// Print remaining chunks
 	for (int i = 0; i < chunks - 1; ++i)
 	{
 		// Add underscore
-		password[loc] = '_';
-		loc++;
+		password[end] = SEPARATOR;
+		end++;
 
 		// Print chunk
-		if (chunk(length, password, passlen, &loc))
+		if (chunk(length, password, passlen, &end))
 			return 1;
 	}
 
-	// Print chunk to screen
+	// Print password to screen
 	printf("Password: %s\n", password);
 
 	// Return success
@@ -83,27 +86,27 @@ int main(int argc, char const *argv[])
  * Generates a chunk in the given password password
  *
  * @param length   the length of the chunk
- * @param password the password to print to
+ * @param password the password buffer to print to
  * @param passlen  the length of the password to print to
- * @param start    the location to start printing at
+ * @param end    the current end of the password
  *
  * @return status of chunk printing
  */
-int chunk(int length, char *password, int passlen, int* start)
+int chunk(int length, char *password, int passlen, int* end)
 {
 	// Return 1 if chunk will exceed buffer
-	if (*start + length > passlen)
+	if (*end + length > passlen)
 	{
-		printf("Chunk exceeds password buffer length by %d characters.\n", *start + length - passlen);
+		printf("Chunk exceeds password buffer length by %d characters.\n", *end + length - passlen);
 		return 1;
 	}
 
 	// Generate length number of random keys
 	for (int i = 0; i < length; ++i)
-		password[*start + i] = KEYSPACE[rand() % KEYSPACE_LENGTH];
+		password[*end + i] = KEYSPACE[rand() % KEYSPACE_LENGTH];
 
 	// Increment location
-	*start += length;
+	*end += length;
 
 	// Return success
 	return 0;
