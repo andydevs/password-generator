@@ -41,3 +41,9 @@ uninstall: $(BINARY)
 
 test: $(BINARY)
 	$(BINARY) 3 4
+
+error: $(BINARY)
+	$(BINARY) 3
+
+help: $(BINARY)
+	$(BINARY) -help

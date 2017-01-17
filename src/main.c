@@ -9,6 +9,7 @@
 
 // Libraries being used
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include <time.h>
 
@@ -18,6 +19,14 @@ const unsigned KEYSPACE_LENGTH = 64;
 
 // Separator between key groups
 const char SEPARATOR = '_';
+
+// Help tag
+const char HELP_TAG[] = "-help";
+
+/**
+ * Prints the help message
+ */
+void help();
 
 /**
  * Prints a randomly generated password with the given number 
@@ -63,9 +72,23 @@ int separator(char *password, int passlen, int* end);
  */
 int main(int argc, char const *argv[])
 {
+	// Print help message if found in arguments
+	if (argc > 1)
+	{
+		for (int i = 1; i < argc; ++i)
+		{
+			if (strcmp(argv[i], HELP_TAG) == 0)
+			{
+				help();
+				return 0;
+			}
+		}
+	}
+
 	if (argc < 3)
 	{
-		printf("Program requires 2 command line arguments. Got: %d\n", argc - 1);
+		printf("ERROR: Program requires 2 command line arguments! Got: %d\n", argc - 1);
+		help();
 		return 1;
 	}
 
@@ -79,6 +102,19 @@ int main(int argc, char const *argv[])
 
 	// Return success
 	return 0;
+}
+
+/**
+ * Prints the help message
+ */
+void help()
+{
+	printf("$ password [arguments]\n");
+	printf("1: Number of chunks in the password\n");
+	printf("2: Length of each chunk in the password\n");
+	printf("\n");
+	printf("$ password -help\n");
+	printf("Prints the help message\n");
 }
 
 /**
