@@ -25,8 +25,10 @@ const char HELP_TAG[] = "-help";
 
 /**
  * Prints the help message
+ *
+ * @returns status
  */
-void help();
+int help();
 
 /**
  * Prints a randomly generated password with the given number 
@@ -74,23 +76,15 @@ int main(int argc, char const *argv[])
 {
 	// Print help message if found in arguments
 	if (argc > 1)
-	{
 		for (int i = 1; i < argc; ++i)
-		{
 			if (strcmp(argv[i], HELP_TAG) == 0)
-			{
-				help();
-				return 0;
-			}
-		}
-	}
+				return help();
 
 	// Error if not all required arguments given
 	if (argc < 3)
 	{
 		printf("ERROR: Program requires 2 command line arguments! Got: %d\n", argc - 1);
-		help();
-		return 1;
+		return help() || 1;
 	}
 
 	// Password information
@@ -112,15 +106,21 @@ int main(int argc, char const *argv[])
 
 /**
  * Prints the help message
+ *
+ * @returns status
  */
-void help()
+int help()
 {
+	// Print data
 	printf("$ password [arguments]\n");
 	printf("1: Number of chunks in the password\n");
 	printf("2: Length of each chunk in the password\n");
 	printf("\n");
 	printf("$ password -help\n");
 	printf("Prints the help message\n");
+
+	// Return success
+	return 0;
 }
 
 /**
@@ -206,8 +206,7 @@ int separator(char *password, int passlen, int* end)
 	}
 
 	// Add separator and increment end
-	password[*end] = SEPARATOR;
-	*end += 1;
+	password[*end] = SEPARATOR; *end += 1;
 
 	// Return success
 	return 0;
