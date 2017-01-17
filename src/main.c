@@ -14,13 +14,13 @@
 
 // Keyspace information
 const char KEYSPACE[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz?!";
-const unsigned int KEYSPACE_LENGTH = 64;
+const unsigned KEYSPACE_LENGTH = 64;
 
 // Separator between key groups
 const char SEPARATOR = '_';
 
 /**
- * Generates a chunk in the given password password
+ * Generates a chunk in the given password
  *
  * @param length   the length of the chunk
  * @param password the password to print to
@@ -30,6 +30,17 @@ const char SEPARATOR = '_';
  * @return status of chunk printing
  */
 int chunk(int length, char *password, int passlen, int* end);
+
+/**
+ * Adds a separator to the given password
+ *
+ * @param password the password to print to
+ * @param passlen  the length of the password to print to
+ * @param end      the current end of the password
+ *
+ * @return status of separator printing
+ */
+int separator(char *password, int passlen, int* end);
 
 /**
  * The main function in the program
@@ -48,9 +59,9 @@ int main(int argc, char const *argv[])
 	}
 
 	// Password information
-	int chunks  = atoi(argv[1]);
-	int length  = atoi(argv[2]);
-	int passlen = chunks*length + chunks - 1;
+	int chunks   = atoi(argv[1]);
+	int chunklen = atoi(argv[2]);
+	int passlen  = chunklen*chunks + (chunks - 1); // (chunks - 1) = number of separators
 
 	// Seed random number generator
 	srand(time(NULL));
@@ -60,23 +71,23 @@ int main(int argc, char const *argv[])
 	int end = 0;
 
 	// Print first chunk
-	if (chunk(length, password, passlen, &end))
+	if (chunk(chunklen, password, passlen, &end))
 		return 1;
 
 	// Print remaining chunks
 	for (int i = 0; i < chunks - 1; ++i)
 	{
-		// Add underscore
-		password[end] = SEPARATOR;
-		end++;
+		// Add separator
+		if (separator(password, passlen, &end))
+			return 1;
 
 		// Print chunk
-		if (chunk(length, password, passlen, &end))
+		if (chunk(chunklen, password, passlen, &end))
 			return 1;
 	}
 
 	// Print password to screen
-	printf("Password: %s\n", password);
+	printf("%s\n", password);
 
 	// Return success
 	return 0;
@@ -97,16 +108,40 @@ int chunk(int length, char *password, int passlen, int* end)
 	// Return 1 if chunk will exceed buffer
 	if (*end + length > passlen)
 	{
-		printf("Chunk exceeds password buffer length by %d characters.\n", *end + length - passlen);
+		printf("ERROR: Adding chunk exceeds password buffer length by %d characters!\n", *end + length - passlen);
 		return 1;
 	}
 
-	// Generate length number of random keys
+	// Generate length number of random keys and increment end accordingly
 	for (int i = 0; i < length; ++i)
 		password[*end + i] = KEYSPACE[rand() % KEYSPACE_LENGTH];
-
-	// Increment location
 	*end += length;
+
+	// Return success
+	return 0;
+};
+
+/**
+ * Adds a separator to the given password
+ *
+ * @param password the password to print to
+ * @param passlen  the length of the password to print to
+ * @param end      the current end of the password
+ *
+ * @return status of separator printing
+ */
+int separator(char *password, int passlen, int* end)
+{
+	// Return 1 if separator will exceed buffer
+	if (*end + 1 > passlen)
+	{
+		printf("ERROR: Adding separator exceeds password buffer length!\n");
+		return 1;
+	}
+
+	// Add separator and increment end
+	password[*end] = SEPARATOR;
+	*end += 1;
 
 	// Return success
 	return 0;
