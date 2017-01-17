@@ -39,11 +39,17 @@ install: $(BINARY)
 uninstall: $(BINARY)
 	rm $(INSDIR)/$(TARGET)
 
-test: $(BINARY)
+basic: $(BINARY)
 	$(BINARY) 3 4
+
+amount: $(BINARY)
+	$(BINARY) 3 4 10
 
 error: $(BINARY)
 	$(BINARY) 3
 
 help: $(BINARY)
 	$(BINARY) -help
+
+file: $(BINARY)
+	$(BINARY) 3 4 10 > passwords.txt

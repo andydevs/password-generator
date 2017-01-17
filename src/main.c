@@ -85,6 +85,7 @@ int main(int argc, char const *argv[])
 		}
 	}
 
+	// Error if not all required arguments given
 	if (argc < 3)
 	{
 		printf("ERROR: Program requires 2 command line arguments! Got: %d\n", argc - 1);
@@ -95,10 +96,15 @@ int main(int argc, char const *argv[])
 	// Password information
 	int chunks = atoi(argv[1]);
 	int length = atoi(argv[2]);
+	int amount = 1;
 
-	// Generate password
-	if (password(chunks, length))
-		return 1;
+	// Modify amount if given
+	if (argc > 3) amount = atoi(argv[3]);
+
+	// Generate passwords
+	for (int i = 0; i < amount; ++i)
+		if (password(chunks, length))
+			return 1;
 
 	// Return success
 	return 0;
