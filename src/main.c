@@ -115,6 +115,7 @@ int help()
 	printf("$ password [arguments]\n");
 	printf("1: Number of chunks in the password\n");
 	printf("2: Length of each chunk in the password\n");
+	printf("3 (optional): Number of passwords to generate\n");
 	printf("\n");
 	printf("$ password -help\n");
 	printf("Prints the help message\n");
