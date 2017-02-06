@@ -152,7 +152,8 @@ int password(int chunks, int length)
 		if (chunk(length, password, passlen, &end))
 			return 1;
 	}
-
+    // Null-terminate password
+    password[passlen - 1] = '\0';
 	// Print password to screen
 	printf("%s\n", password);
 
